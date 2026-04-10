@@ -1,0 +1,344 @@
+[2026-04-10 14:36:47] INFO  WEBrick 1.4.4
+[2026-04-10 14:36:47] INFO  ruby 2.6.10 (2022-04-12) [universal.x86_64-darwin24]
+[2026-04-10 14:36:47] INFO  WEBrick::HTTPServer#start: pid=29655 port=3000
+::1 - - [10/Apr/2026:14:36:52 -03] "GET / HTTP/1.1" 200 7838
+- -> /
+::1 - - [10/Apr/2026:14:36:53 -03] "GET /FNPM-Logo_ocpsets.webp HTTP/1.1" 200 37882
+::1 - - [10/Apr/2026:14:36:53 -03] "GET /caralho.mp3 HTTP/1.1" 200 259134
+http://localhost:3000/ -> /caralho.mp3
+http://localhost:3000/ -> /FNPM-Logo_ocpsets.webp
+::1 - - [10/Apr/2026:14:36:53 -03] "GET /Play-botao_FNPM.webp HTTP/1.1" 200 17024
+::1 - - [10/Apr/2026:14:36:53 -03] "GET /box_bottom_FNPM.webp HTTP/1.1" 200 33648
+http://localhost:3000/ -> /box_bottom_FNPM.webp
+http://localhost:3000/ -> /Play-botao_FNPM.webp
+::1 - - [10/Apr/2026:14:36:53 -03] "GET /OBS_FNPM.png HTTP/1.1" 200 169825
+http://localhost:3000/ -> /OBS_FNPM.png
+::1 - - [10/Apr/2026:14:36:53 -03] "GET /BG_FNPM.png HTTP/1.1" 200 565451
+http://localhost:3000/ -> /BG_FNPM.png
+[2026-04-10 14:36:53] ERROR `/favicon.ico' not found.
+::1 - - [10/Apr/2026:14:36:53 -03] "GET /favicon.ico HTTP/1.1" 404 282
+- -> /favicon.ico
+::1 - - [10/Apr/2026:14:48:07 -03] "GET / HTTP/1.1" 200 8013
+- -> /
+::1 - - [10/Apr/2026:14:48:08 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 200 35924
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:14:48:08 -03] "GET /OBS_FNPM.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /OBS_FNPM.png
+::1 - - [10/Apr/2026:14:54:13 -03] "GET / HTTP/1.1" 200 8013
+- -> /
+::1 - - [10/Apr/2026:14:54:13 -03] "GET /caralho.mp3 HTTP/1.1" 304 0
+http://localhost:3000/ -> /caralho.mp3
+::1 - - [10/Apr/2026:15:06:07 -03] "GET / HTTP/1.1" 200 8078
+- -> /
+::1 - - [10/Apr/2026:15:06:08 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 304 0
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:15:06:08 -03] "GET /OBS_FNPM.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /OBS_FNPM.png
+::1 - - [10/Apr/2026:15:09:20 -03] "GET / HTTP/1.1" 200 8080
+- -> /
+::1 - - [10/Apr/2026:15:14:48 -03] "GET / HTTP/1.1" 200 9014
+- -> /
+::1 - - [10/Apr/2026:15:14:49 -03] "GET /caralho.mp3 HTTP/1.1" 304 0
+http://localhost:3000/ -> /caralho.mp3
+::1 - - [10/Apr/2026:15:14:49 -03] "GET /cursor.png HTTP/1.1" 200 10313
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:15:16:48 -03] "GET / HTTP/1.1" 200 9028
+- -> /
+::1 - - [10/Apr/2026:15:16:49 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 304 0
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:15:16:50 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:15:20:18 -03] "GET / HTTP/1.1" 200 9014
+- -> /
+::1 - - [10/Apr/2026:15:20:25 -03] "GET /OBS_FNPM.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /OBS_FNPM.png
+::1 - - [10/Apr/2026:15:20:25 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:15:24:12 -03] "GET / HTTP/1.1" 200 9195
+- -> /
+::1 - - [10/Apr/2026:15:24:15 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:15:32:16 -03] "GET / HTTP/1.1" 200 8846
+- -> /
+::1 - - [10/Apr/2026:15:32:19 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 304 0
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:15:32:19 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:15:43:35 -03] "GET / HTTP/1.1" 200 8841
+- -> /
+::1 - - [10/Apr/2026:15:43:37 -03] "GET /caralho.mp3 HTTP/1.1" 304 0
+http://localhost:3000/ -> /caralho.mp3
+::1 - - [10/Apr/2026:15:43:37 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:15:43:37 -03] "GET /OBS_FNPM.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /OBS_FNPM.png
+::1 - - [10/Apr/2026:15:46:40 -03] "GET / HTTP/1.1" 200 8692
+- -> /
+::1 - - [10/Apr/2026:15:46:41 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 304 0
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:15:57:19 -03] "GET / HTTP/1.1" 200 8788
+- -> /
+::1 - - [10/Apr/2026:15:57:20 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:16:01:06 -03] "GET / HTTP/1.1" 200 8788
+- -> /
+::1 - - [10/Apr/2026:16:01:07 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 304 0
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:16:01:07 -03] "GET /OBS_FNPM.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /OBS_FNPM.png
+::1 - - [10/Apr/2026:16:22:32 -03] "GET / HTTP/1.1" 200 9275
+- -> /
+::1 - - [10/Apr/2026:16:22:33 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 304 0
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:16:22:33 -03] "GET /OBS_FNPM.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:16:22:33 -03] "GET /caralho.mp3 HTTP/1.1" 304 0
+http://localhost:3000/ -> /OBS_FNPM.png
+http://localhost:3000/ -> /caralho.mp3
+::1 - - [10/Apr/2026:16:22:33 -03] "GET /faixa3.png HTTP/1.1" 200 60859
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:16:22:33 -03] "GET /faixa1.png HTTP/1.1" 200 103528
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:16:22:33 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:16:22:33 -03] "GET /elemento4.png HTTP/1.1" 200 16379
+http://localhost:3000/ -> /elemento4.png
+::1 - - [10/Apr/2026:16:22:33 -03] "GET /faixa2.png HTTP/1.1" 200 67960
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:16:24:16 -03] "GET / HTTP/1.1" 200 9274
+- -> /
+::1 - - [10/Apr/2026:16:24:17 -03] "GET /faixa1.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:16:24:17 -03] "GET /faixa2.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:16:24:17 -03] "GET /elemento4.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /elemento4.png
+::1 - - [10/Apr/2026:16:24:17 -03] "GET /faixa3.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:16:26:45 -03] "GET / HTTP/1.1" 200 9417
+- -> /
+::1 - - [10/Apr/2026:16:26:46 -03] "GET /FNPM-Logo_ocpsets.webp HTTP/1.1" 304 0
+http://localhost:3000/ -> /FNPM-Logo_ocpsets.webp
+::1 - - [10/Apr/2026:16:26:46 -03] "GET /box_bottom_FNPM.webp HTTP/1.1" 304 0
+http://localhost:3000/ -> /box_bottom_FNPM.webp
+::1 - - [10/Apr/2026:16:26:46 -03] "GET /Play-botao_FNPM.webp HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:16:26:46 -03] "GET /BG_FNPM.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /BG_FNPM.png
+http://localhost:3000/ -> /Play-botao_FNPM.webp
+::1 - - [10/Apr/2026:16:26:46 -03] "GET /faixa1.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:16:26:46 -03] "GET /faixa2.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:16:26:47 -03] "GET /faixa3.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:16:26:47 -03] "GET /elemento4.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+http://localhost:3000/ -> /elemento4.png
+::1 - - [10/Apr/2026:16:31:28 -03] "GET / HTTP/1.1" 200 9577
+- -> /
+::1 - - [10/Apr/2026:16:31:31 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:16:31:31 -03] "GET /faixa3.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:16:31:31 -03] "GET /faixa2.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:16:31:31 -03] "GET /elemento4.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /elemento4.png
+::1 - - [10/Apr/2026:16:31:31 -03] "GET /faixa1.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:16:54:03 -03] "GET / HTTP/1.1" 200 9824
+- -> /
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 304 0
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /caralho.mp3 HTTP/1.1" 304 0
+http://localhost:3000/ -> /caralho.mp3
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /faixa1.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /aconta.png HTTP/1.1" 200 121279
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /cerveja.png HTTP/1.1" 200 84541
+http://localhost:3000/ -> /cerveja.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /OBS_FNPM.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /OBS_FNPM.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /agua.png HTTP/1.1" 200 95128
+http://localhost:3000/ -> /agua.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /faixa3.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /toalha.png HTTP/1.1" 200 98546
+http://localhost:3000/ -> /toalha.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /elemento4.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /elemento4.png
+::1 - - [10/Apr/2026:16:54:04 -03] "GET /faixa2.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:16:56:23 -03] "GET / HTTP/1.1" 200 9830
+- -> /
+::1 - - [10/Apr/2026:16:56:25 -03] "GET /agua.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /agua.png
+::1 - - [10/Apr/2026:16:56:25 -03] "GET /toalha.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /toalha.png
+::1 - - [10/Apr/2026:16:56:25 -03] "GET /cerveja.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cerveja.png
+::1 - - [10/Apr/2026:16:56:25 -03] "GET /aconta.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:17:04:08 -03] "GET / HTTP/1.1" 200 10749
+- -> /
+::1 - - [10/Apr/2026:17:04:11 -03] "GET /faixa1.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:17:04:11 -03] "GET /faixa2.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:17:04:11 -03] "GET /agua.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /agua.png
+::1 - - [10/Apr/2026:17:04:11 -03] "GET /faixa3.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:17:04:11 -03] "GET /elemento4.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:17:04:11 -03] "GET /toalha.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /elemento4.png
+http://localhost:3000/ -> /toalha.png
+::1 - - [10/Apr/2026:17:04:11 -03] "GET /cerveja.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cerveja.png
+::1 - - [10/Apr/2026:17:04:11 -03] "GET /aconta.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:17:10:51 -03] "GET / HTTP/1.1" 200 10745
+- -> /
+::1 - - [10/Apr/2026:17:10:52 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:17:10:52 -03] "GET /agua.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /agua.png
+::1 - - [10/Apr/2026:17:10:52 -03] "GET /elemento4.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /elemento4.png
+::1 - - [10/Apr/2026:17:10:52 -03] "GET /aconta.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:17:10:52 -03] "GET /faixa3.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:17:10:52 -03] "GET /faixa1.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:17:10:52 -03] "GET /toalha.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /toalha.png
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:17:10:52 -03] "GET /faixa2.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:17:10:53 -03] "GET /cerveja.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cerveja.png
+::1 - - [10/Apr/2026:17:14:35 -03] "GET / HTTP/1.1" 200 10749
+- -> /
+::1 - - [10/Apr/2026:17:14:36 -03] "GET /agua.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /agua.png
+::1 - - [10/Apr/2026:17:14:36 -03] "GET /cerveja.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cerveja.png
+::1 - - [10/Apr/2026:17:14:36 -03] "GET /toalha.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /toalha.png
+::1 - - [10/Apr/2026:17:14:36 -03] "GET /aconta.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:17:21:02 -03] "GET / HTTP/1.1" 200 10751
+- -> /
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /Clarendon_-Regular.ttf HTTP/1.1" 304 0
+http://localhost:3000/ -> /Clarendon_-Regular.ttf
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /elemento4.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /elemento4.png
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /toalha.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /toalha.png
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /faixa2.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /faixa3.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /agua.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /faixa1.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /agua.png
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /OBS_FNPM.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /OBS_FNPM.png
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /aconta.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:17:21:05 -03] "GET /cerveja.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cerveja.png
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:17:26:53 -03] "GET / HTTP/1.1" 200 10316
+- -> /
+::1 - - [10/Apr/2026:17:26:54 -03] "GET /caralho.mp3 HTTP/1.1" 304 0
+http://localhost:3000/ -> /caralho.mp3
+::1 - - [10/Apr/2026:17:26:54 -03] "GET /agua.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /agua.png
+::1 - - [10/Apr/2026:17:26:54 -03] "GET /toalha.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /toalha.png
+::1 - - [10/Apr/2026:17:26:54 -03] "GET /cerveja.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cerveja.png
+::1 - - [10/Apr/2026:17:26:54 -03] "GET /cursor.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:17:26:54 -03] "GET /aconta.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:17:31:38 -03] "GET / HTTP/1.1" 200 11527
+- -> /
+::1 - - [10/Apr/2026:17:31:40 -03] "GET /faixa1.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa1.png
+::1 - - [10/Apr/2026:17:31:40 -03] "GET /faixa3.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:17:31:40 -03] "GET /faixa2.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:17:31:40 -03] "GET /elemento4.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:17:31:40 -03] "GET /agua.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:17:31:40 -03] "GET /toalha.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /toalha.png
+http://localhost:3000/ -> /elemento4.png
+http://localhost:3000/ -> /agua.png
+::1 - - [10/Apr/2026:17:31:41 -03] "GET /aconta.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:17:31:41 -03] "GET /cerveja.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cerveja.png
+::1 - - [10/Apr/2026:17:38:30 -03] "GET / HTTP/1.1" 200 11712
+- -> /
+::1 - - [10/Apr/2026:17:38:33 -03] "GET /agua.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /agua.png
+::1 - - [10/Apr/2026:17:38:33 -03] "GET /cerveja.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cerveja.png
+::1 - - [10/Apr/2026:17:38:33 -03] "GET /toalha.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /toalha.png
+::1 - - [10/Apr/2026:17:38:33 -03] "GET /aconta.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /aconta.png
+::1 - - [10/Apr/2026:17:40:19 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:41:18 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:41:22 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:41:26 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:42:59 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:43:37 -03] "GET / HTTP/1.1" 304 0
+- -> /
+::1 - - [10/Apr/2026:17:43:38 -03] "GET /cursor.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:17:43:38 -03] "GET /elemento4.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /cursor.png
+::1 - - [10/Apr/2026:17:43:38 -03] "GET /faixa2.png HTTP/1.1" 304 0
+::1 - - [10/Apr/2026:17:43:38 -03] "GET /faixa1.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa1.png
+http://localhost:3000/ -> /elemento4.png
+http://localhost:3000/ -> /faixa2.png
+::1 - - [10/Apr/2026:17:43:38 -03] "GET /faixa3.png HTTP/1.1" 304 0
+http://localhost:3000/ -> /faixa3.png
+::1 - - [10/Apr/2026:17:45:53 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:06 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:12 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:16 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:20 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:27 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:31 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:34 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:42 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:46 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:51 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:46:55 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:47:01 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
+::1 - - [10/Apr/2026:17:49:30 -03] "GET /index.html HTTP/1.1" 200 11712
+- -> /index.html
