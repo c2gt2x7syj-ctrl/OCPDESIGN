@@ -20,11 +20,11 @@
             overflow: hidden;
         }
         canvas {
-            /* Mantém a proporção 16:9 e escala para caber na tela do dispositivo */
-            width: calc(100vh * 16 / 9);
-            max-width: 100vw;
+            /* Mantém a proporção 16:9 e deixa espaço superior/inferior */
+            --vpad: 96px; /* espaço total vertical (top + bottom) */
+            width: calc(min(100vw, (100vh - var(--vpad)) * 16 / 9));
             height: auto;
-            max-height: 100vh;
+            max-height: calc(100vh - var(--vpad));
             display: block;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
         }
@@ -45,8 +45,15 @@ let cursorX = -50;
 let cursorSpeed = 5.5;
 let successfulCollections = 0;
 let levelUpMessage = 0;
-let gameState = "START"; 
+let gameState = "LOGIN";
 let somColisao;
+// Player / Login / Ranking
+let player = { name: '', email: '' };
+let playerNameInput, playerEmailInput, loginBtnElement;
+let scoreSaved = false;
+// Coordenadas do botão de ranking na Start Screen (detect click)
+let startRankingX = 0, startRankingY = 0, startRankingW = 0, startRankingH = 0;
+let rankingBackX = 0, rankingBackY = 0, rankingBackW = 0, rankingBackH = 0;
 // Posição e dimensões do botão Play na tela de START (calculadas dinamicamente)
 let startPlayX = 0;
 let startPlayY = 0;
@@ -110,6 +117,79 @@ function setup() {
     textFont(fonteClarendon);
     
     dj = new DJ();
+
+    // --- CRIA ELEMENTOS DO FORM DE LOGIN (DOM) ---
+    playerNameInput = document.createElement('input');
+    playerNameInput.placeholder = 'Nome do jogador';
+    playerNameInput.id = 'playerNameInput';
+    Object.assign(playerNameInput.style, {
+        position: 'absolute',
+        display: 'none',
+        zIndex: 9999,
+        padding: '10px',
+        fontSize: '16px',
+        borderRadius: '6px',
+        border: 'none',
+        outline: 'none',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+    });
+    document.body.appendChild(playerNameInput);
+
+    playerEmailInput = document.createElement('input');
+    playerEmailInput.placeholder = 'Email (opcional)';
+    playerEmailInput.id = 'playerEmailInput';
+    Object.assign(playerEmailInput.style, {
+        position: 'absolute',
+        display: 'none',
+        zIndex: 9999,
+        padding: '10px',
+        fontSize: '16px',
+        borderRadius: '6px',
+        border: 'none',
+        outline: 'none',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+    });
+    document.body.appendChild(playerEmailInput);
+
+    loginBtnElement = document.createElement('button');
+    loginBtnElement.innerText = 'Entrar';
+    Object.assign(loginBtnElement.style, {
+        position: 'absolute',
+        display: 'none',
+        zIndex: 9999,
+        padding: '10px 16px',
+        fontSize: '16px',
+        borderRadius: '6px',
+        border: 'none',
+        cursor: 'pointer',
+        background: '#FCEFB4'
+    });
+    loginBtnElement.onclick = function() {
+        let name = (playerNameInput.value || '').trim();
+        if (!name) {
+            alert('Por favor digite seu nome.');
+            return;
+        }
+        player.name = name;
+        player.email = (playerEmailInput.value || '').trim();
+        savePlayerToStorage();
+        hideLoginUI();
+        gameState = 'START';
+    };
+    document.body.appendChild(loginBtnElement);
+
+    // Atualiza posição dos elementos quando a janela for redimensionada
+    window.addEventListener('resize', updateLoginUIPosition);
+
+    // Carrega jogador salvo, caso exista
+    loadPlayerFromStorage();
+    if (player && player.name) {
+        gameState = 'START';
+        hideLoginUI();
+    } else {
+        gameState = 'LOGIN';
+        showLoginUI();
+    }
 }
 
 function draw() {
@@ -364,10 +444,16 @@ function resetGame() {
 // --- CLASSES ---
 class DJ {
     constructor() {
-        this.baseSize = 60; 
+        // tamanho base proporcional à altura do canvas (escala responsiva)
+        this.baseSize = floor(height * 0.12);
         this.r = this.baseSize;
-        this.x = 120;
-        this.andaresY = [height - 50, height - 160, height - 270];
+        this.x = width * 0.06;
+        // andares posicionados proporcionalmente a partir da base
+        this.andaresY = [
+            height - floor(height * 0.046),
+            height - floor(height * 0.148),
+            height - floor(height * 0.25)
+        ];
         this.andarAtual = 0;
         this.y = this.andaresY[this.andarAtual];
         this.isInvulnerable = false;
@@ -399,7 +485,9 @@ class DJ {
         let halfHeight = this.r / 2;
         let halfWidth = (imgDedo && imgDedo.width && imgDedo.height) ? (this.r * imgDedo.width / imgDedo.height) / 2 : halfHeight;
         let effectiveRadius = max(halfHeight, halfWidth);
-        return distance < (effectiveRadius + entity.size / 2);
+        // usa tamanho exibido do entity quando disponível (definido em show()), senão usa entity.size
+        let entityRadius = (entity.displayHeight ? max(entity.displayHeight, entity.displayWidth || 0) : entity.size) / 2;
+        return distance < (effectiveRadius + entityRadius);
     }
     show() {
         if (this.isInvulnerable && frameCount % 10 < 5) return;
@@ -421,31 +509,45 @@ class DJ {
 
 class Obstacle {
     constructor() {
-        this.size = 70;
+        // tamanho proporcional à altura do canvas
+        this.size = floor(height * 0.09);
         this.x = width;
         let andarSorteado = floor(random(3));
         this.y = dj.andaresY[andarSorteado];
+        this.displayWidth = this.size;
+        this.displayHeight = this.size;
     }
     move() { this.x -= gameSpeed * obstacleSpeedMultiplier; }
     show() {
         if (imgObs) {
-            image(imgObs, this.x, this.y, this.size * 3.5, this.size * 1.3);
+            // desenha preservando proporção da imagem
+            let dispH = this.size * 1.1;
+            let dispW = (imgObs.width && imgObs.height) ? dispH * (imgObs.width / imgObs.height) : dispH;
+            this.displayWidth = dispW;
+            this.displayHeight = dispH;
+            image(imgObs, this.x, this.y, dispW, dispH);
         }
     }
 }
 
 class Collectible {
     constructor() {
-        this.size = 70;
+        this.size = floor(height * 0.09);
         this.x = width;
         let andarSorteado = floor(random(3));
         this.y = dj.andaresY[andarSorteado];
         this.img = random(imgGoodRequests);
+        this.displayWidth = this.size;
+        this.displayHeight = this.size;
     }
     move() { this.x -= gameSpeed * collectibleSpeedMultiplier; }
     show() {
         if (this.img) {
-            image(this.img, this.x, this.y, this.size * 3.5, this.size * 1.3);
+            let dispH = this.size * 1.0;
+            let dispW = (this.img.width && this.img.height) ? dispH * (this.img.width / this.img.height) : dispH;
+            this.displayWidth = dispW;
+            this.displayHeight = dispH;
+            image(this.img, this.x, this.y, dispW, dispH);
         }
     }
 }
