@@ -55,6 +55,7 @@ let scoreSaved = false;
 let startRankingX = 0, startRankingY = 0, startRankingW = 0, startRankingH = 0;
 let rankingBackX = 0, rankingBackY = 0, rankingBackW = 0, rankingBackH = 0;
 let rankingPlayX = 0, rankingPlayY = 0, rankingPlayW = 0, rankingPlayH = 0;
+let rankingLogoutX = 0, rankingLogoutY = 0, rankingLogoutW = 0, rankingLogoutH = 0;
 // Posição e dimensões do botão Play na tela de START (calculadas dinamicamente)
 let startPlayX = 0;
 let startPlayY = 0;
@@ -71,7 +72,7 @@ let baseSpawnInterval = 28; // valor base usado para calcular o intervalo de spa
 // Variáveis de Mídia
 let imgBg, imgObs, imgStartTitle, imgControlBox, imgPlayBtn, imgCursor;
 let imgFaixa1, imgFaixa2, imgFaixa3, imgElemento4;
-let imgDedo;
+let imgDedo, imgStartScreen;
 let imgGoodRequests = [];
 let fonteClarendon;
 
@@ -105,7 +106,10 @@ function preload() {
     imgGoodRequests.push(loadImage('agua.png'));
     imgGoodRequests.push(loadImage('cerveja.png'));
     imgGoodRequests.push(loadImage('toalha.png'));
-    imgGoodRequests.push(loadImage('aconta.png')); 
+    imgGoodRequests.push(loadImage('aconta.png'));
+
+    // 5. CARREGAMENTO DE START SCREEN
+    imgStartScreen = loadImage('start_screen.png'); 
 }
 
 function setup() {
@@ -174,6 +178,8 @@ function setup() {
         player.name = name;
         player.email = (playerEmailInput.value || '').trim();
         savePlayerToStorage();
+        playerNameInput.value = '';
+        playerEmailInput.value = '';
         hideLoginUI();
         gameState = 'START';
     };
@@ -239,13 +245,18 @@ function mousePressed() {
     } else if (gameState === "PLAYING") {
         dj.jump();
     } else if (gameState === "RANKING") {
-        // Detecta cliques em Voltar ou Jogar Novamente
-        let backX = rankingBackX || (width * 0.34);
-        let backY = rankingBackY || (height * 0.86);
-        let backW = rankingBackW || (width * 0.18);
+        // Detecta cliques em Voltar, Logout ou Jogar Novamente
+        let backX = rankingBackX || (width * 0.25);
+        let backY = rankingBackY || (height * 0.87);
+        let backW = rankingBackW || (width * 0.16);
         let backH = rankingBackH || Math.max(40, height * 0.06);
 
-        let playX = rankingPlayX || (width * 0.66);
+        let logoutX = rankingLogoutX || (width * 0.5);
+        let logoutY = rankingLogoutY || backY;
+        let logoutW = rankingLogoutW || backW;
+        let logoutH = rankingLogoutH || backH;
+
+        let playX = rankingPlayX || (width * 0.75);
         let playY = rankingPlayY || backY;
         let playW = rankingPlayW || backW;
         let playH = rankingPlayH || backH;
@@ -253,6 +264,15 @@ function mousePressed() {
         if (mouseX > backX - backW/2 && mouseX < backX + backW/2 &&
             mouseY > backY - backH/2 && mouseY < backY + backH/2) {
             gameState = "START";
+            return;
+        }
+
+        if (mouseX > logoutX - logoutW/2 && mouseX < logoutX + logoutW/2 &&
+            mouseY > logoutY - logoutH/2 && mouseY < logoutY + logoutH/2) {
+            // Trocar jogador (logout)
+            player = { name: '', email: '' };
+            localStorage.removeItem('fnpm_player');
+            gameState = "LOGIN";
             return;
         }
 
@@ -269,16 +289,33 @@ function mousePressed() {
 function keyPressed() {
     if (!dj) return;
 
-    if (gameState === "START" && key === ' ') gameState = "PLAYING";
+    if (gameState === "LOGIN" && key === 'Enter') {
+        let name = (playerNameInput.value || '').trim();
+        if (!name) {
+            alert('Por favor digite seu nome.');
+            return;
+        }
+        player.name = name;
+        player.email = (playerEmailInput.value || '').trim();
+        savePlayerToStorage();
+        hideLoginUI();
+        gameState = 'START';
+    } else if (gameState === "START" && key === ' ') gameState = "PLAYING";
     else if (gameState === "PLAYING" && keyCode === UP_ARROW) dj.subir();
     else if (gameState === "PLAYING" && keyCode === DOWN_ARROW) dj.descer();
-    else if (gameState === "GAMEOVER" && key === ' ') resetGame();
+    else if (gameState === "RANKING" && key === ' ') {
+        resetGame();
+    } else if (gameState === "GAMEOVER" && key === ' ') resetGame();
 }
 
 // --- TELAS ---
 function drawStartScreen() {
-    // Background Image
-    if (imgBg) {
+    // Start Screen Background
+    if (imgStartScreen) {
+        imageMode(CORNER);
+        image(imgStartScreen, 0, 0, width, height);
+        imageMode(CENTER);
+    } else if (imgBg) {
         imageMode(CORNER);
         image(imgBg, 0, 0, width, height);
         imageMode(CENTER);
@@ -286,84 +323,28 @@ function drawStartScreen() {
         background("#FCEFB4");
     }
 
-    // Layout responsivo (proporções baseadas em `width` e `height`)
     let w = width;
     let h = height;
 
-    // Top-Left banner (faixa1)
-    if (imgFaixa1 && imgFaixa1.width) {
-        let fa1W = w * 0.18;
-        let fa1H = fa1W * (imgFaixa1.height / imgFaixa1.width);
-        image(imgFaixa1, w * 0.12, h * 0.12, fa1W, fa1H);
-    }
+    // Defina as áreas clicáveis/interativas sobre a imagem
+    // Botão PLAY (ajuste conforme a posição na sua imagem)
+    startPlayX = w * 0.5;
+    startPlayY = h * 0.72;
+    startPlayW = w * 0.15;
+    startPlayH = h * 0.12;
 
-    // Central Title (top-center)
-    if (imgStartTitle && imgStartTitle.width) {
-        let titleW = w * 0.44;
-        let titleH = titleW * (imgStartTitle.height / imgStartTitle.width);
-        image(imgStartTitle, w * 0.5, h * 0.12, titleW, titleH);
-    }
+    // Botão RANKING (canto inferior esquerdo)
+    startRankingX = w * 0.12;
+    startRankingY = h * 0.9;
+    startRankingW = w * 0.14;
+    startRankingH = h * 0.06;
 
-    // Top-Right banner (faixa3)
-    if (imgFaixa3 && imgFaixa3.width) {
-        let fa3W = w * 0.18;
-        let fa3H = fa3W * (imgFaixa3.height / imgFaixa3.width);
-        image(imgFaixa3, w * 0.88, h * 0.12, fa3W, fa3H);
-    }
-
-    // Vertical Meter/Fader (left-middle)
-    if (imgElemento4 && imgElemento4.width) {
-        let elemW = w * 0.08;
-        let elemH = elemW * (imgElemento4.height / imgElemento4.width);
-        image(imgElemento4, w * 0.08, h * 0.52, elemW, elemH);
-    }
-
-    // Center-Middle large banner (faixa2)
-    if (imgFaixa2 && imgFaixa2.width) {
-        let fa2W = w * 0.62;
-        let fa2H = fa2W * (imgFaixa2.height / imgFaixa2.width);
-        image(imgFaixa2, w * 0.5, h * 0.55, fa2W, fa2H);
-    }
-
-    // Control Box (bottom-right) and Play button
-    if (imgControlBox && imgControlBox.width) {
-        let ctrlW = w * 0.32;
-        let ctrlH = ctrlW * (imgControlBox.height / imgControlBox.width);
-        let ctrlX = w * 0.78;
-        let ctrlY = h * 0.82;
-        image(imgControlBox, ctrlX, ctrlY, ctrlW, ctrlH);
-
-        if (imgPlayBtn && imgPlayBtn.width) {
-            let playW = w * 0.08;
-            let playH = playW * (imgPlayBtn.height / imgPlayBtn.width);
-            // posiciona botão dentro da caixa de controle
-            let playX = ctrlX + ctrlW * 0.15;
-            let playY = ctrlY + ctrlH * 0.18;
-            image(imgPlayBtn, playX, playY, playW, playH);
-            startPlayX = playX;
-            startPlayY = playY;
-            startPlayW = playW;
-            startPlayH = playH;
-        } else {
-            // fallback se não houver imagem do play
-            startPlayX = w * 0.88;
-            startPlayY = h * 0.9;
-            startPlayW = w * 0.08;
-            startPlayH = startPlayW * 0.6;
-        }
+    // Exibe inputs de login mapeados sobre a imagem
+    if (!player || !player.name) {
+        showLoginUI();
+        updateLoginUIPosition();
     } else {
-        // fallback: desenha botão play direto no canto inferior direito
-        if (imgPlayBtn && imgPlayBtn.width) {
-            let playW = w * 0.08;
-            let playH = playW * (imgPlayBtn.height / imgPlayBtn.width);
-            let playX = w * 0.88;
-            let playY = h * 0.9;
-            image(imgPlayBtn, playX, playY, playW, playH);
-            startPlayX = playX;
-            startPlayY = playY;
-            startPlayW = playW;
-            startPlayH = playH;
-        }
+        hideLoginUI();
     }
 }
 
@@ -492,21 +473,32 @@ function updateLoginUIPosition() {
     const cnv = document.querySelector('canvas');
     if (!cnv) return;
     const rect = cnv.getBoundingClientRect();
-    const inputW = Math.min(480, rect.width * 0.5);
-    const left = rect.left + (rect.width - inputW) / 2;
-    const top = rect.top + rect.height * 0.42;
+    
+    // MAPEAMENTO DOS CAMPOS DE LOGIN NA IMAGEM START_SCREEN
+    // Ajuste as proporções baseado na sua imagem específica
+    
+    // Posição do campo Nome (ex: 30% de largura, 60% de altura)
+    const nameInputW = Math.min(400, rect.width * 0.35);
+    const nameInputX = rect.left + (rect.width * 0.32);
+    const nameInputY = rect.top + (rect.height * 0.62);
 
-    playerNameInput.style.width = inputW + 'px';
-    playerNameInput.style.left = left + 'px';
-    playerNameInput.style.top = top + 'px';
+    playerNameInput.style.width = nameInputW + 'px';
+    playerNameInput.style.left = nameInputX + 'px';
+    playerNameInput.style.top = nameInputY + 'px';
 
-    playerEmailInput.style.width = inputW + 'px';
-    playerEmailInput.style.left = left + 'px';
-    playerEmailInput.style.top = (top + 54) + 'px';
+    // Posição do campo Email (ex: 30% de largura, 72% de altura)
+    const emailInputW = Math.min(400, rect.width * 0.35);
+    const emailInputX = rect.left + (rect.width * 0.32);
+    const emailInputY = rect.top + (rect.height * 0.72);
 
+    playerEmailInput.style.width = emailInputW + 'px';
+    playerEmailInput.style.left = emailInputX + 'px';
+    playerEmailInput.style.top = emailInputY + 'px';
+
+    // Posição do botão Entrar
     loginBtnElement.style.width = '140px';
-    loginBtnElement.style.left = (left + (inputW - 140) / 2) + 'px';
-    loginBtnElement.style.top = (top + 108) + 'px';
+    loginBtnElement.style.left = (nameInputX + (nameInputW - 140) / 2) + 'px';
+    loginBtnElement.style.top = (emailInputY + 54) + 'px';
 }
 
 function loadPlayerFromStorage() {
@@ -574,31 +566,53 @@ function drawRankingScreen() {
     fill(255);
     textSize(48);
     textAlign(CENTER, CENTER);
-    text('RANKING', width/2, height * 0.12);
+    text('RANKING', width/2, height * 0.08);
+
+    // Exibe jogador atual
+    fill(200);
+    textSize(20);
+    text(`Jogador: ${player.name}`, width/2, height * 0.15);
 
     let ranking = getRankingFromStorage();
-    textSize(24);
+    textSize(22);
     let startY = height * 0.22;
-    let rowH = Math.min(48, height * 0.06);
+    let rowH = Math.min(44, height * 0.06);
     for (let i = 0; i < ranking.length && i < 10; i++) {
         let p = ranking[i];
-        let y = startY + i * (rowH + 6);
-        fill(255);
+        let y = startY + i * (rowH + 4);
+        
+        // Destaca o jogador atual
+        if (p.name === player.name && p.score === score) {
+            fill('#FCEFB4');
+            textSize(24);
+        } else {
+            fill(255);
+            textSize(22);
+        }
         text(`${i+1}. ${p.name} — ${p.score}`, width/2, y);
     }
 
-    // Botões Voltar e Jogar Novamente
-    let btnW = width * 0.18;
+    // Botões Voltar, Logout e Jogar Novamente
+    let btnW = width * 0.16;
     let btnH = Math.max(40, height * 0.06);
-    let btnX = width * 0.34;
-    let btnY = height * 0.86;
-    fill('#FCEFB4'); rect(btnX, btnY, btnW, btnH, 8);
-    fill('#111'); textSize(18); text('Voltar', btnX, btnY);
-    rankingBackX = btnX; rankingBackY = btnY; rankingBackW = btnW; rankingBackH = btnH;
+    let btnY = height * 0.87;
+    
+    // Botão Voltar (esquerda)
+    let backX = width * 0.25;
+    fill('#FCEFB4'); rect(backX, btnY, btnW, btnH, 8);
+    fill('#111'); textSize(16); text('Voltar', backX, btnY);
+    rankingBackX = backX; rankingBackY = btnY; rankingBackW = btnW; rankingBackH = btnH;
 
-    let playX = width * 0.66;
-    fill('#FCEFB4'); rect(playX, btnY, btnW, btnH, 8);
-    fill('#111'); text('Jogar Novamente', playX, btnY);
+    // Botão Logout (centro)
+    let logoutX = width * 0.5;
+    fill('#FF6B6B'); rect(logoutX, btnY, btnW, btnH, 8);
+    fill('#FFF'); textSize(16); text('Trocar Jogador', logoutX, btnY);
+    rankingLogoutX = logoutX; rankingLogoutY = btnY; rankingLogoutW = btnW; rankingLogoutH = btnH;
+    
+    // Botão Jogar Novamente (direita)
+    let playX = width * 0.75;
+    fill('#6BCB77'); rect(playX, btnY, btnW, btnH, 8);
+    fill('#FFF'); textSize(16); text('Jogar Novamente', playX, btnY);
     rankingPlayX = playX; rankingPlayY = btnY; rankingPlayW = btnW; rankingPlayH = btnH;
 }
 
@@ -620,7 +634,7 @@ function resetGame() {
 class DJ {
     constructor() {
         // tamanho base proporcional à altura do canvas (escala responsiva)
-        this.baseSize = floor(height * 0.12);
+        this.baseSize = floor(height * 0.2);
         this.r = this.baseSize;
         this.x = width * 0.06;
         // andares posicionados proporcionalmente a partir da base
@@ -685,7 +699,7 @@ class DJ {
 class Obstacle {
     constructor() {
         // tamanho proporcional à altura do canvas
-        this.size = floor(height * 0.09);
+        this.size = floor(height * 0.18);
         this.x = width;
         let andarSorteado = floor(random(3));
         this.y = dj.andaresY[andarSorteado];
@@ -707,7 +721,7 @@ class Obstacle {
 
 class Collectible {
     constructor() {
-        this.size = floor(height * 0.09);
+        this.size = floor(height * 0.18);
         this.x = width;
         let andarSorteado = floor(random(3));
         this.y = dj.andaresY[andarSorteado];
