@@ -20,6 +20,12 @@
             overflow: hidden;
         }
         canvas {
+            /* Mantém a proporção 16:9 e escala para caber na tela do dispositivo */
+            width: calc(100vh * 16 / 9);
+            max-width: 100vw;
+            height: auto;
+            max-height: 100vh;
+            display: block;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
         }
     </style>
@@ -41,10 +47,23 @@ let successfulCollections = 0;
 let levelUpMessage = 0;
 let gameState = "START"; 
 let somColisao;
+// Posição e dimensões do botão Play na tela de START (calculadas dinamicamente)
+let startPlayX = 0;
+let startPlayY = 0;
+let startPlayW = 0;
+let startPlayH = 0;
+
+// Ajustes de dificuldade / spawn
+let obstacleSpeedMultiplier = 0.9; // reduz ligeiramente a velocidade dos pedidos (obstáculos)
+let collectibleSpeedMultiplier = 1.0; // multiplicador para coletáveis
+let obstacleProbability = 0.7; // chance de spawn ser um obstáculo (aumenta dificuldade)
+let minSpawnInterval = 8; // intervalo mínimo entre spawns (em frames)
+let baseSpawnInterval = 28; // valor base usado para calcular o intervalo de spawn
 
 // Variáveis de Mídia
 let imgBg, imgObs, imgStartTitle, imgControlBox, imgPlayBtn, imgCursor;
 let imgFaixa1, imgFaixa2, imgFaixa3, imgElemento4;
+let imgDedo;
 let imgGoodRequests = [];
 let fonteClarendon;
 
@@ -58,6 +77,9 @@ function preload() {
     // 2. CARREGAMENTO DE ÁUDIO
     soundFormats('mp3', 'ogg');
     somColisao = loadSound('caralho.mp3');
+
+    // 3. CARREGAMENTO DO DJ (dedo)
+    imgDedo = loadImage('dedo.png');
 
     // 3. CARREGAMENTO DE IMAGENS (Com os nomes e formatos exatos)
     imgStartTitle = loadImage('FNPM-Logo_ocpsets.webp');
@@ -79,7 +101,7 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(800, 400);
+    createCanvas(1920, 1080);
     textAlign(CENTER, CENTER);
     rectMode(CENTER);
     imageMode(CENTER);
@@ -105,13 +127,13 @@ function mousePressed() {
     if (!dj) return; 
 
     if (gameState === "START") {
-        // Play button positioned at (680, 350) with dynamically scaled dimensions
-        let playX = 680;
-        let playY = 350;
-        let playW = imgPlayBtn && imgPlayBtn.width ? imgPlayBtn.width * 0.8 : 104;
-        let playH = imgPlayBtn && imgPlayBtn.height ? imgPlayBtn.height * 0.8 : 60;
-        
-        if (mouseX > playX - playW/2 && mouseX < playX + playW/2 && 
+        // Usa as dimensões calculadas em `drawStartScreen` para detectar clique no Play
+        let playX = startPlayX || (width * 0.88);
+        let playY = startPlayY || (height * 0.9);
+        let playW = startPlayW || (imgPlayBtn && imgPlayBtn.width ? imgPlayBtn.width * 0.8 : 104);
+        let playH = startPlayH || (imgPlayBtn && imgPlayBtn.height ? imgPlayBtn.height * 0.8 : 60);
+
+        if (mouseX > playX - playW/2 && mouseX < playX + playW/2 &&
             mouseY > playY - playH/2 && mouseY < playY + playH/2) {
             gameState = "PLAYING";
         }
@@ -142,49 +164,84 @@ function drawStartScreen() {
         background("#FCEFB4");
     }
 
-    // Define scaling factors based on image dimensions (preserved)
-    let scaleFactor1 = 1.0; // faixa1 (São Paulo banner)
-    let scaleFactor2 = 1.1; // faixa2 (OCP SETS blue banner)
-    let scaleFactor3 = 0.95; // faixa3 (OCP SETS box)
-    let scaleFactorTitle = 0.9; // FNPM-Logo
-    let scaleFactorElem = 0.85; // elemento4 (meter)
-    let scaleFactorBtn = 0.8; // Play button
+    // Layout responsivo (proporções baseadas em `width` e `height`)
+    let w = width;
+    let h = height;
 
-    // Distributed Window Layout (like a DAW audio interface)
-    
-    // Window 1: São Paulo banner (Top-Left, floating panel)
+    // Top-Left banner (faixa1)
     if (imgFaixa1 && imgFaixa1.width) {
-        image(imgFaixa1, 80, 50, imgFaixa1.width * scaleFactor1, imgFaixa1.height * scaleFactor1);
+        let fa1W = w * 0.18;
+        let fa1H = fa1W * (imgFaixa1.height / imgFaixa1.width);
+        image(imgFaixa1, w * 0.12, h * 0.12, fa1W, fa1H);
     }
 
-    // Window 2: Central Title (Top-Center, prominent window)
+    // Central Title (top-center)
     if (imgStartTitle && imgStartTitle.width) {
-        image(imgStartTitle, 400, 75, imgStartTitle.width * scaleFactorTitle, imgStartTitle.height * scaleFactorTitle);
+        let titleW = w * 0.44;
+        let titleH = titleW * (imgStartTitle.height / imgStartTitle.width);
+        image(imgStartTitle, w * 0.5, h * 0.12, titleW, titleH);
     }
 
-    // Window 3: OCP SETS Box (Top-Right, floating panel)
+    // Top-Right banner (faixa3)
     if (imgFaixa3 && imgFaixa3.width) {
-        image(imgFaixa3, 720, 50, imgFaixa3.width * scaleFactor3, imgFaixa3.height * scaleFactor3);
+        let fa3W = w * 0.18;
+        let fa3H = fa3W * (imgFaixa3.height / imgFaixa3.width);
+        image(imgFaixa3, w * 0.88, h * 0.12, fa3W, fa3H);
     }
 
-    // Window 4: Vertical Meter/Fader (Left-Middle, tall panel)
+    // Vertical Meter/Fader (left-middle)
     if (imgElemento4 && imgElemento4.width) {
-        image(imgElemento4, 50, 200, imgElemento4.width * scaleFactorElem, imgElemento4.height * scaleFactorElem);
+        let elemW = w * 0.08;
+        let elemH = elemW * (imgElemento4.height / imgElemento4.width);
+        image(imgElemento4, w * 0.08, h * 0.52, elemW, elemH);
     }
 
-    // Window 5: OCP SETS Banner (Center-Middle, large floating window)
+    // Center-Middle large banner (faixa2)
     if (imgFaixa2 && imgFaixa2.width) {
-        image(imgFaixa2, 400, 220, imgFaixa2.width * scaleFactor2, imgFaixa2.height * scaleFactor2);
+        let fa2W = w * 0.62;
+        let fa2H = fa2W * (imgFaixa2.height / imgFaixa2.width);
+        image(imgFaixa2, w * 0.5, h * 0.55, fa2W, fa2H);
     }
 
-    // Window 6: Control Box (Bottom-Right corner)
+    // Control Box (bottom-right) and Play button
     if (imgControlBox && imgControlBox.width) {
-        image(imgControlBox, 600, 310, imgControlBox.width * 0.7, imgControlBox.height * 0.7);
-    }
+        let ctrlW = w * 0.32;
+        let ctrlH = ctrlW * (imgControlBox.height / imgControlBox.width);
+        let ctrlX = w * 0.78;
+        let ctrlY = h * 0.82;
+        image(imgControlBox, ctrlX, ctrlY, ctrlW, ctrlH);
 
-    // Window 7: Play Button (Bottom-Right, inside control area)
-    if (imgPlayBtn && imgPlayBtn.width) {
-        image(imgPlayBtn, 680, 350, imgPlayBtn.width * scaleFactorBtn, imgPlayBtn.height * scaleFactorBtn);
+        if (imgPlayBtn && imgPlayBtn.width) {
+            let playW = w * 0.08;
+            let playH = playW * (imgPlayBtn.height / imgPlayBtn.width);
+            // posiciona botão dentro da caixa de controle
+            let playX = ctrlX + ctrlW * 0.15;
+            let playY = ctrlY + ctrlH * 0.18;
+            image(imgPlayBtn, playX, playY, playW, playH);
+            startPlayX = playX;
+            startPlayY = playY;
+            startPlayW = playW;
+            startPlayH = playH;
+        } else {
+            // fallback se não houver imagem do play
+            startPlayX = w * 0.88;
+            startPlayY = h * 0.9;
+            startPlayW = w * 0.08;
+            startPlayH = startPlayW * 0.6;
+        }
+    } else {
+        // fallback: desenha botão play direto no canto inferior direito
+        if (imgPlayBtn && imgPlayBtn.width) {
+            let playW = w * 0.08;
+            let playH = playW * (imgPlayBtn.height / imgPlayBtn.width);
+            let playX = w * 0.88;
+            let playY = h * 0.9;
+            image(imgPlayBtn, playX, playY, playW, playH);
+            startPlayX = playX;
+            startPlayY = playY;
+            startPlayW = playW;
+            startPlayH = playH;
+        }
     }
 }
 
@@ -208,9 +265,10 @@ function playGame() {
     }
 
     // Lógica de Spawn com Dificuldade Progressiva
-    let spawnInterval = max(12, 40 - floor(score / 400));
+    // Spawn mais frequente conforme a pontuação, e maior probabilidade de obstáculos
+    let spawnInterval = max(minSpawnInterval, baseSpawnInterval - floor(score / 300));
     if (frameCount % spawnInterval === 0) {
-        if (random(1) < 0.6) obstacles.push(new Obstacle());
+        if (random(1) < obstacleProbability) obstacles.push(new Obstacle());
         else collectibles.push(new Collectible());
     }
 
@@ -337,16 +395,27 @@ class DJ {
     }
     hits(entity) {
         let distance = dist(this.x, this.y, entity.x, entity.y);
-        return distance < (this.r / 2 + entity.size / 2);
+        // Considera a largura da imagem ao calcular o raio de colisão (preserva proporção)
+        let halfHeight = this.r / 2;
+        let halfWidth = (imgDedo && imgDedo.width && imgDedo.height) ? (this.r * imgDedo.width / imgDedo.height) / 2 : halfHeight;
+        let effectiveRadius = max(halfHeight, halfWidth);
+        return distance < (effectiveRadius + entity.size / 2);
     }
     show() {
         if (this.isInvulnerable && frameCount % 10 < 5) return;
-        
-        fill('#FFFFFF'); 
-        rect(this.x, this.y, this.r, this.r);
-        fill('#000000');
-        textSize(18); // Fonte um pouco maior pro DJ
-        text("DJ", this.x, this.y);
+        if (imgDedo) {
+            imageMode(CENTER);
+            // Usa this.r como altura desejada e preserva proporção da imagem
+            let dispH = this.r;
+            let dispW = (imgDedo.width && imgDedo.height) ? dispH * (imgDedo.width / imgDedo.height) : dispH;
+            image(imgDedo, this.x, this.y, dispW, dispH);
+        } else {
+            fill('#FFFFFF');
+            rect(this.x, this.y, this.r, this.r);
+            fill('#000000');
+            textSize(18);
+            text("DJ", this.x, this.y);
+        }
     }
 }
 
@@ -357,7 +426,7 @@ class Obstacle {
         let andarSorteado = floor(random(3));
         this.y = dj.andaresY[andarSorteado];
     }
-    move() { this.x -= gameSpeed; }
+    move() { this.x -= gameSpeed * obstacleSpeedMultiplier; }
     show() {
         if (imgObs) {
             image(imgObs, this.x, this.y, this.size * 3.5, this.size * 1.3);
@@ -373,7 +442,7 @@ class Collectible {
         this.y = dj.andaresY[andarSorteado];
         this.img = random(imgGoodRequests);
     }
-    move() { this.x -= gameSpeed; }
+    move() { this.x -= gameSpeed * collectibleSpeedMultiplier; }
     show() {
         if (this.img) {
             image(this.img, this.x, this.y, this.size * 3.5, this.size * 1.3);
