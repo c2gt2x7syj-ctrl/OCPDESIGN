@@ -54,6 +54,7 @@ let scoreSaved = false;
 // Coordenadas do botão de ranking na Start Screen (detect click)
 let startRankingX = 0, startRankingY = 0, startRankingW = 0, startRankingH = 0;
 let rankingBackX = 0, rankingBackY = 0, rankingBackW = 0, rankingBackH = 0;
+let rankingPlayX = 0, rankingPlayY = 0, rankingPlayW = 0, rankingPlayH = 0;
 // Posição e dimensões do botão Play na tela de START (calculadas dinamicamente)
 let startPlayX = 0;
 let startPlayY = 0;
@@ -193,10 +194,14 @@ function setup() {
 }
 
 function draw() {
-    if (gameState === "START") {
+    if (gameState === "LOGIN") {
+        drawLoginScreen();
+    } else if (gameState === "START") {
         drawStartScreen();
     } else if (gameState === "PLAYING") {
         playGame();
+    } else if (gameState === "RANKING") {
+        drawRankingScreen();
     } else if (gameState === "GAMEOVER") {
         drawGameOverScreen();
     }
@@ -213,12 +218,49 @@ function mousePressed() {
         let playW = startPlayW || (imgPlayBtn && imgPlayBtn.width ? imgPlayBtn.width * 0.8 : 104);
         let playH = startPlayH || (imgPlayBtn && imgPlayBtn.height ? imgPlayBtn.height * 0.8 : 60);
 
+        // Ranking button (fallback caso não esteja calculado)
+        let rankX = startRankingX || (width * 0.12);
+        let rankY = startRankingY || (height * 0.9);
+        let rankW = startRankingW || (width * 0.14);
+        let rankH = startRankingH || (height * 0.06);
+
         if (mouseX > playX - playW/2 && mouseX < playX + playW/2 &&
             mouseY > playY - playH/2 && mouseY < playY + playH/2) {
             gameState = "PLAYING";
+            return;
+        }
+
+        if (mouseX > rankX - rankW/2 && mouseX < rankX + rankW/2 &&
+            mouseY > rankY - rankH/2 && mouseY < rankY + rankH/2) {
+            // mostra ranking
+            gameState = "RANKING";
+            return;
         }
     } else if (gameState === "PLAYING") {
         dj.jump();
+    } else if (gameState === "RANKING") {
+        // Detecta cliques em Voltar ou Jogar Novamente
+        let backX = rankingBackX || (width * 0.34);
+        let backY = rankingBackY || (height * 0.86);
+        let backW = rankingBackW || (width * 0.18);
+        let backH = rankingBackH || Math.max(40, height * 0.06);
+
+        let playX = rankingPlayX || (width * 0.66);
+        let playY = rankingPlayY || backY;
+        let playW = rankingPlayW || backW;
+        let playH = rankingPlayH || backH;
+
+        if (mouseX > backX - backW/2 && mouseX < backX + backW/2 &&
+            mouseY > backY - backH/2 && mouseY < backY + backH/2) {
+            gameState = "START";
+            return;
+        }
+
+        if (mouseX > playX - playW/2 && mouseX < playX + playW/2 &&
+            mouseY > playY - playH/2 && mouseY < playY + playH/2) {
+            resetGame();
+            return;
+        }
     } else if (gameState === "GAMEOVER") {
         resetGame();
     }
@@ -381,7 +423,10 @@ function playGame() {
             dj.takeDamage();
             if (somColisao && somColisao.isLoaded()) somColisao.play();
             obstacles.splice(i, 1);
-            if (lives <= 0) gameState = "GAMEOVER";
+            if (lives <= 0) {
+                saveScoreToRanking();
+                gameState = "RANKING";
+            }
         } else if (obstacles[i].x < -50) {
             score += 10; 
             obstacles.splice(i, 1);
@@ -425,6 +470,136 @@ function drawGameOverScreen() {
     textSize(16);
     fill(200);
     text("Pressione ESPAÇO ou TOQUE para rebobinar", width / 2, height / 2 + 60);
+}
+
+// --- LOGIN / RANKING UTILITIES ---
+function showLoginUI() {
+    if (!playerNameInput || !playerEmailInput || !loginBtnElement) return;
+    playerNameInput.style.display = 'block';
+    playerEmailInput.style.display = 'block';
+    loginBtnElement.style.display = 'block';
+    updateLoginUIPosition();
+}
+
+function hideLoginUI() {
+    if (!playerNameInput || !playerEmailInput || !loginBtnElement) return;
+    playerNameInput.style.display = 'none';
+    playerEmailInput.style.display = 'none';
+    loginBtnElement.style.display = 'none';
+}
+
+function updateLoginUIPosition() {
+    const cnv = document.querySelector('canvas');
+    if (!cnv) return;
+    const rect = cnv.getBoundingClientRect();
+    const inputW = Math.min(480, rect.width * 0.5);
+    const left = rect.left + (rect.width - inputW) / 2;
+    const top = rect.top + rect.height * 0.42;
+
+    playerNameInput.style.width = inputW + 'px';
+    playerNameInput.style.left = left + 'px';
+    playerNameInput.style.top = top + 'px';
+
+    playerEmailInput.style.width = inputW + 'px';
+    playerEmailInput.style.left = left + 'px';
+    playerEmailInput.style.top = (top + 54) + 'px';
+
+    loginBtnElement.style.width = '140px';
+    loginBtnElement.style.left = (left + (inputW - 140) / 2) + 'px';
+    loginBtnElement.style.top = (top + 108) + 'px';
+}
+
+function loadPlayerFromStorage() {
+    try {
+        const p = localStorage.getItem('fnpm_player');
+        if (p) player = JSON.parse(p);
+    } catch (e) {
+        // ignore
+    }
+}
+
+function savePlayerToStorage() {
+    try {
+        localStorage.setItem('fnpm_player', JSON.stringify(player));
+    } catch (e) {}
+}
+
+function getRankingFromStorage() {
+    try {
+        const r = localStorage.getItem('fnpm_ranking');
+        return r ? JSON.parse(r) : [];
+    } catch (e) { return []; }
+}
+
+function saveScoreToRanking() {
+    if (!player || !player.name) return;
+    let ranking = getRankingFromStorage();
+    ranking.push({ name: player.name, score: score || 0 });
+    ranking.sort((a, b) => b.score - a.score);
+    ranking = ranking.slice(0, 50);
+    try { localStorage.setItem('fnpm_ranking', JSON.stringify(ranking)); } catch (e) {}
+    scoreSaved = true;
+}
+
+function drawLoginScreen() {
+    if (imgBg) {
+        imageMode(CORNER);
+        image(imgBg, 0, 0, width, height);
+        imageMode(CENTER);
+    } else {
+        background('#111');
+    }
+    fill(255);
+    textSize(36);
+    textAlign(CENTER, CENTER);
+    text('Entre para jogar', width/2, height * 0.16);
+    textSize(16);
+    fill(200);
+    text('Digite seu nome e email (opcional)', width/2, height * 0.22);
+    showLoginUI();
+    updateLoginUIPosition();
+}
+
+function drawRankingScreen() {
+    if (imgBg) {
+        imageMode(CORNER);
+        image(imgBg, 0, 0, width, height);
+        imageMode(CENTER);
+    } else {
+        background(20);
+    }
+    // garante que o formulário esteja escondido
+    hideLoginUI();
+
+    fill(255);
+    textSize(48);
+    textAlign(CENTER, CENTER);
+    text('RANKING', width/2, height * 0.12);
+
+    let ranking = getRankingFromStorage();
+    textSize(24);
+    let startY = height * 0.22;
+    let rowH = Math.min(48, height * 0.06);
+    for (let i = 0; i < ranking.length && i < 10; i++) {
+        let p = ranking[i];
+        let y = startY + i * (rowH + 6);
+        fill(255);
+        text(`${i+1}. ${p.name} — ${p.score}`, width/2, y);
+    }
+
+    // Botões Voltar e Jogar Novamente
+    let btnW = width * 0.18;
+    let btnH = Math.max(40, height * 0.06);
+    let btnX = width * 0.34;
+    let btnY = height * 0.86;
+    fill('#FCEFB4'); rect(btnX, btnY, btnW, btnH, 8);
+    fill('#111'); textSize(18); text('Voltar', btnX, btnY);
+    rankingBackX = btnX; rankingBackY = btnY; rankingBackW = btnW; rankingBackH = btnH;
+
+    let playX = width * 0.66;
+    fill('#FCEFB4'); rect(playX, btnY, btnW, btnH, 8);
+    fill('#111'); text('Jogar Novamente', playX, btnY);
+    rankingPlayX = playX; rankingPlayY = btnY; rankingPlayW = btnW; rankingPlayH = btnH;
 }
 
 function resetGame() {
